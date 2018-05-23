@@ -5,7 +5,7 @@ socket.on("connect", () => {
 });
 
 socket.on("newMessage", message => {
-  console.log("Got new message:", message);
+  // console.log("Got new message:", message);
 
   var messages = document.querySelector("#messages");
   var li = document.createElement("li");
@@ -16,10 +16,13 @@ socket.on("newMessage", message => {
 socket.on("newLocationMessage", message => {
   var messages = document.querySelector("#messages");
   var li = document.createElement("li");
+  li.textContent = `${message.from}: `;
+
   var a = document.createElement("a");
   a.setAttribute("href", message.url);
   a.setAttribute("target", "_blank");
   a.textContent = "My current location";
+
   li.appendChild(a);
   messages.appendChild(li);
 });
@@ -30,26 +33,34 @@ socket.on("disconnect", () => {
 
 document.querySelector("#message-form").addEventListener("submit", e => {
   e.preventDefault();
-  var text = document.querySelector("input[name = message]").value;
-  socket.emit("createMessage", { from: "User", text }, () => {});
-  document.querySelector("input[name = message]").value = "";
+  var messageTextbox = document.querySelector("input[name = message]");
+  socket.emit(
+    "createMessage",
+    { from: "User", text: messageTextbox.value },
+    () => {
+      messageTextbox.value = "";
+    }
+  );
 });
 
 var location_btn = document.querySelector("#send-location");
 location_btn.addEventListener("click", () => {
   if (!navigator.geolocation) {
-    alert("Your browser not supported geolocation APIs");
+    alert("Your browser is not supported geolocation APIs");
   }
+
+  location_btn.setAttribute("disabled", "disabled");
 
   navigator.geolocation.getCurrentPosition(
     position => {
-      console.log(position);
+      location_btn.removeAttribute("disabled");
       socket.emit("createLocationMessage", {
         latitude: position.coords.latitude,
         longitude: position.coords.longitude
       });
     },
     () => {
+      location_btn.removeAttribute("disabled");
       alert("Unable to fetch location!");
     }
   );
