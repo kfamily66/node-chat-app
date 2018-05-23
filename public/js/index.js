@@ -5,18 +5,19 @@ socket.on("connect", () => {
 });
 
 socket.on("newMessage", message => {
-  // console.log("Got new message:", message);
+  var formattedTime = moment(message.createdAt).format("H:mm");
 
   var messages = document.querySelector("#messages");
   var li = document.createElement("li");
-  li.textContent = `${message.from}:${message.text}`;
+  li.textContent = `${formattedTime} ${message.from}:${message.text}`;
   messages.appendChild(li);
 });
 
 socket.on("newLocationMessage", message => {
+  var formattedTime = moment(message.createdAt).format("H:mm");
   var messages = document.querySelector("#messages");
   var li = document.createElement("li");
-  li.textContent = `${message.from}: `;
+  li.textContent = `${formattedTime} ${message.from}: `;
 
   var a = document.createElement("a");
   a.setAttribute("href", message.url);
