@@ -15,6 +15,7 @@ socket.on("newMessage", message => {
     from: message.from
   });
   messages.innerHTML += html;
+  scrollToBottom();
 });
 
 socket.on("newLocationMessage", message => {
@@ -30,17 +31,7 @@ socket.on("newLocationMessage", message => {
   });
 
   messages.innerHTML += html;
-
-  // var li = document.createElement("li");
-  // li.textContent = `${formattedTime} ${message.from}: `;
-
-  // var a = document.createElement("a");
-  // a.setAttribute("href", message.url);
-  // a.setAttribute("target", "_blank");
-  // a.textContent = "My current location";
-
-  // li.appendChild(a);
-  // messages.appendChild(li);
+  scrollToBottom();
 });
 
 socket.on("disconnect", () => {
@@ -81,3 +72,27 @@ location_btn.addEventListener("click", () => {
     }
   );
 });
+
+function scrollToBottom() {
+  var messages = document.querySelector("#messages");
+  var newMessage = document.querySelector("#messages li:last-child");
+  var prevMessage = document.querySelector("#messages li:nth-last-child(2)");
+
+  var clientHeight = messages.clientHeight;
+  var scrollHeight = messages.scrollHeight;
+  var scrollTop = messages.scrollTop;
+
+  var newMessageHeight = newMessage.offsetHeight;
+  if (prevMessage) {
+    var prevMessageHeight = prevMessage.offsetHeight;
+  } else {
+    var prevMessageHeight = 0;
+  }
+
+  if (
+    clientHeight + scrollTop + newMessageHeight + prevMessageHeight >=
+    scrollHeight
+  ) {
+    messages.scrollTop = scrollHeight;
+  }
+}

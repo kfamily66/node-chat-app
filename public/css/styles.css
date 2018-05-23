@@ -104,7 +104,7 @@ button:disabled {
   display: flex;
 }
 .chat__sidebar {
-  /* overflow-y: scroll; */
+  overflow-y: scroll;
   width: 260px;
   height: 100vh;
   background: -moz-linear-gradient(
@@ -185,6 +185,10 @@ button:disabled {
 }
 .message {
   padding: 10px;
+}
+
+.message__body p {
+  overflow-wrap: break-word;
 }
 .message__title {
   display: flex;
