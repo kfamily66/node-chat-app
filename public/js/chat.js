@@ -2,6 +2,16 @@ var socket = io();
 
 socket.on("connect", () => {
   console.log("Connected to server");
+  const params = $.deparam(window.location.search);
+
+  socket.emit("join", params, err => {
+    if (err) {
+      alert(err);
+      window.location.href = "/";
+    } else {
+      console.log("No error");
+    }
+  });
 });
 
 socket.on("newMessage", message => {
@@ -32,6 +42,18 @@ socket.on("newLocationMessage", message => {
 
   messages.innerHTML += html;
   scrollToBottom();
+});
+
+socket.on("updateUserList", users => {
+  const user_list = document.createElement("ol");
+  const side_list = document.querySelector("#users");
+  users.forEach(user => {
+    li = document.createElement("li");
+    li.textContent = user;
+    user_list.appendChild(li);
+  });
+  side_list.innerHTML = "";
+  side_list.appendChild(user_list);
 });
 
 socket.on("disconnect", () => {
