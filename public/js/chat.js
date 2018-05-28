@@ -47,11 +47,13 @@ socket.on("newLocationMessage", message => {
 socket.on("updateUserList", users => {
   const user_list = document.createElement("ol");
   const side_list = document.querySelector("#users");
+
   users.forEach(user => {
     li = document.createElement("li");
     li.textContent = user;
     user_list.appendChild(li);
   });
+
   side_list.innerHTML = "";
   side_list.appendChild(user_list);
 });
@@ -63,13 +65,10 @@ socket.on("disconnect", () => {
 document.querySelector("#message-form").addEventListener("submit", e => {
   e.preventDefault();
   var messageTextbox = document.querySelector("input[name = message]");
-  socket.emit(
-    "createMessage",
-    { from: "User", text: messageTextbox.value },
-    () => {
-      messageTextbox.value = "";
-    }
-  );
+
+  socket.emit("createMessage", { text: messageTextbox.value }, () => {
+    messageTextbox.value = "";
+  });
 });
 
 var location_btn = document.querySelector("#send-location");
