@@ -34,6 +34,10 @@ button:hover {
   padding: 10px;
 }
 
+.form-field button {
+  margin-bottom: 10px;
+}
+
 .form-field {
   margin: 20px 0;
 }
